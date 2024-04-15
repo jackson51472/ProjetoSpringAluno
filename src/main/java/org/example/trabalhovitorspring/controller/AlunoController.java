@@ -3,11 +3,10 @@ package org.example.trabalhovitorspring.controller;
 import org.example.trabalhovitorspring.model.entity.Aluno;
 import org.example.trabalhovitorspring.model.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/aluno")
@@ -18,11 +17,40 @@ public class AlunoController {
 
     @GetMapping("/ola")
     public String ola(){
-        return "Ola mundo";
+        return "Olá mundo";
     }
 
     @GetMapping("/list")
     public List<Aluno> list(){
         return alunoRepository.findAll();
+    }
+
+    @GetMapping("/getById/{id}")
+    public Optional<Aluno> getById(@PathVariable("id") int id) {
+        return alunoRepository.findById(id);
+    }
+
+    @GetMapping("/total")
+    public Long getTotal() {
+        return alunoRepository.count();
+    }
+
+    @PostMapping("/create")
+    public Aluno create(@RequestBody Aluno aluno) {
+        return alunoRepository.save(aluno);
+    }
+
+    @PutMapping("/edit")
+    public Aluno edit(@RequestBody Aluno aluno) {
+        return alunoRepository.save(aluno);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Aluno delete(@PathVariable("id") int id) {
+        Optional<Aluno> alunoQueEuQueroRemover = alunoRepository.findById(id);
+        if (!alunoQueEuQueroRemover.isPresent()) return null;
+
+        alunoRepository.delete(alunoQueEuQueroRemover.get());
+        return alunoQueEuQueroRemover.get();
     }
 }
